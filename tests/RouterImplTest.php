@@ -25,7 +25,10 @@ class RouterImplTest extends \PHPUnit_Framework_TestCase {
             ->build());
         $this->assertEquals('hello', $actual->controller());
         $this->assertEquals('world', $actual->action());
-        $this->assertEmpty($actual->additionalParams());
+        $this->assertEquals([
+			'controller' => 'hello',
+			'action' => 'world'
+        ], $actual->additionalParams());
     }
 
     public function testNumericParam() {

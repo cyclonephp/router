@@ -42,9 +42,6 @@ class RouterImpl implements Router {
         $ns = isset($params['namespace']) ? $params['namespace'] : null;
         $controller = isset($params['controller']) ? $params['controller'] : null;
         $action = isset($params['action']) ? $params['action'] : null;
-        unset($params['namespace']);
-        unset($params['controller']);
-        unset($params['action']);
         return $this->paramsFactory->create($ns, $controller, $action, $params);
     }
 	
