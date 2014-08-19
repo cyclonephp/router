@@ -10,12 +10,15 @@ class Route {
     private $uriPattern;
 
     private $uriRegex;
+    
+    private $paramRules;
 
     /**
      * @param $uriPattern
      */
-    public function __construct($uriPattern) {
+    public function __construct($uriPattern, array $paramRules = array()) {
         $this->uriPattern = $uriPattern;
+        $this->paramRules = $paramRules;
     }
 
     /**
@@ -26,7 +29,7 @@ class Route {
      */
     public function matches(Request $request) {
         $uri = $request->uri();
-        $uri = trim($uri, '/');
+        $uri = ltrim($uri, '/');
         $regex = $this->uriRegex();
         $matches = [];
         if (preg_match_all($regex, $uri, $matches)) {
@@ -45,9 +48,10 @@ class Route {
         if ($this->uriRegex === null) {
             $matches = [];
             preg_match_all('/{(?P<name>\w+)}/', $this->uriPattern, $matches);
-            $uriRegex = '/' . str_replace('/', '\/', $this->uriPattern) . '/';
+            $uriRegex = '/^' . preg_replace('/[.\\+*?[^\\]$=!|\/:]/', '\\\\$0', $this->uriPattern) . '$/';
             foreach ($matches['name'] as $paramName) {
-                $uriRegex = str_replace('{' . $paramName . '}', '(?P<' . $paramName . '>\w+)', $uriRegex);
+				$paramRule = isset($this->paramRules[$paramName]) ? $this->paramRules[$paramName] : '[^{}]+';
+                $uriRegex = str_replace('{' . $paramName . '}', '(?P<' . $paramName . '>' . $paramRule . ')', $uriRegex);
             }
             $this->uriRegex = $uriRegex;
         }

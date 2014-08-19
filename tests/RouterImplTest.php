@@ -21,7 +21,7 @@ class RouterImplTest extends \PHPUnit_Framework_TestCase {
              '{controller}/{action}'
         ])->getRoutingParams(Request::builder()
             ->method(Request::METHOD_GET)
-            ->uri('/hello/world/')
+            ->uri('/hello/world')
             ->build());
         $this->assertEquals('hello', $actual->controller());
         $this->assertEquals('world', $actual->action());
@@ -33,7 +33,7 @@ class RouterImplTest extends \PHPUnit_Framework_TestCase {
             'user/{id}'
         ])->getRoutingParams(Request::builder()
                 ->method(Request::METHOD_GET)
-                ->uri('/user/12/')
+                ->uri('/user/12')
                 ->build());
         $this->assertEquals(12, $actual->additionalParams()['id']);
     }
