@@ -12,13 +12,16 @@ class Route {
     private $uriRegex;
     
     private $paramRules;
+    
+    private $requestPredicates;
 
     /**
      * @param $uriPattern
      */
-    public function __construct($uriPattern, array $paramRules = array()) {
+    public function __construct($uriPattern, array $paramRules = array(), array $requestPredicates = array()) {
         $this->uriPattern = $uriPattern;
         $this->paramRules = $paramRules;
+        $this->requestPredicates = $requestPredicates;
     }
 
     /**
@@ -28,6 +31,10 @@ class Route {
      * @return array
      */
     public function matches(Request $request) {
+		foreach ($this->requestPredicates as $predicate) {
+			if ( ! $predicate($request))
+				return null;
+		}
         $uri = $request->uri();
         $uri = ltrim($uri, '/');
         $regex = $this->uriRegex();

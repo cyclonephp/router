@@ -64,4 +64,14 @@ class RouteTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals(['lang' => 'hu', 'title' => 'hello-there'], $route->matches(self::requestForUri('/hu/hello-there')));
 	}
 	
+	public function testCustomPredicate() {
+		$route = new Route('user/{userId}', array(), array(
+			function (Request $req) {
+				return $req->method() == Request::METHOD_GET;
+			}
+		));
+		$this->assertEquals(['userId' => 42], $route->matches(self::requestForUri('/user/42')));
+		$this->assertNull($route->matches(Request::builder()->uri('/user/42')->method(Request::METHOD_POST)->build()));
+	}
+	
 }
