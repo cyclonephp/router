@@ -19,6 +19,7 @@
         }
     ],
 	"require" : {
+		"mnapoli/php-di": "~4.0",
 		"cyclonephp/http": "dev-master"
 	},
 	"require-dev" : {
